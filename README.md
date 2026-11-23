@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ClinicFlow — Doctor Appointment Booking (Demo)
 
-## Getting Started
+A demo appointment booking app for a single-doctor clinic, built with Next.js 15, React 19 and Tailwind CSS 4.
+All data is fake and lives in the browser (localStorage) — there is no database or backend.
 
-First, run the development server:
+## What's inside
+
+**Patient app** (`/patient`)
+- Doctor profile / clinic website (`/`) with live clinic status
+- Mobile OTP sign-in (simulated)
+- Slot booking for self or family members, new vs follow-up, clinic or video
+- Demo payment (UPI / card / pay at clinic)
+- **Live queue tracker with wait-time prediction** — "You are #4, expected at 11:35, leave home by 11:15"
+- **Upload old prescriptions, lab reports and scans** (photo or PDF) and attach them to a visit
+- Digital prescriptions (printable / PDF), daily medicine reminders, health timeline
+- Reschedule, cancel, rate visits, follow-up reminders, notifications
+
+**Doctor dashboard** (`/doctor`)
+- Today's queue: call next, skip, no-show, walk-ins, live consult timer
+- "Running late" broadcast that updates every waiting patient's predicted time
+- Prescription writer with templates, medicine search, allergy warning, follow-up
+- Calendar, patient records with uploads, analytics (peak hours, no-show rate, revenue), reviews
+- Availability, fees and leave management
+
+Open the patient and doctor views in two browser tabs — they stay in sync.
+Use **Reset demo data** in the menu to start over.
+
+## How wait-time prediction works
+
+`src/lib/predict.ts` learns the doctor's average consultation time per visit type from completed visits,
+then for each waiting patient: `eta = now + remaining time of current consult + Σ expected time of patients ahead + announced delay`,
+never earlier than the booked slot, with a ± range from the historical spread.
+
+## Run locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Deploy (Render)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Build command `npm install && npm run build`, start command `npm run start` (see `render.yaml`).
